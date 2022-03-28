@@ -157,6 +157,7 @@ class App:
         self.correct_guesses = []
         self.incorrect_guesses = []
         self.remaining_guesses = 8
+        self.remaining.config(foreground="green")
         self.update_screen()
         ttk.Label(self.hangman_area, text=" ").grid(row=6, column=9)
         ttk.Label(self.hangman_area, text=" ").grid(row=6, column=7)
