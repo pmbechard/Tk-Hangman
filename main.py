@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 from functools import partial
 from random_word import RandomWords
 
@@ -17,6 +18,9 @@ class App:
         # Window Settings
         self.root.title("Hangman")
         self.root.resizable(0, 0)
+        ico = Image.open('images/pb.png')
+        photo = ImageTk.PhotoImage(ico)
+        self.root.wm_iconphoto(False, photo)
 
         # TITLE AREA
         self.title_area = ttk.Frame(self.root, width=430, height=50, relief=RIDGE, padding=10)
