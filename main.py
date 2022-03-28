@@ -49,7 +49,7 @@ class App:
         self.incorrect = ttk.Label(self.guesses_area, text="", foreground="red", font=8)
         self.incorrect.pack(anchor=W)
         ttk.Label(self.guesses_area, text="Guesses left: ", font=("Arial", 12, "bold")).pack(anchor=W)
-        self.remaining = ttk.Label(self.guesses_area, text=self.remaining_guesses, foreground="orange", font=8)
+        self.remaining = ttk.Label(self.guesses_area, text=self.remaining_guesses, foreground="green", font=8)
         self.remaining.pack(anchor=W)
 
         # Picture Area
@@ -131,12 +131,14 @@ class App:
             ttk.Label(self.hangman_area, text="|").grid(row=5, column=8)
         elif self.remaining_guesses == 3:
             ttk.Label(self.hangman_area, text="|").grid(row=4, column=8)
+            self.remaining.config(foreground="red")
         elif self.remaining_guesses == 4:
             ttk.Label(self.hangman_area, text="_").grid(row=3, column=9)
             ttk.Label(self.hangman_area, text="_").grid(row=3, column=10)
         elif self.remaining_guesses == 5:
             ttk.Label(self.hangman_area, text="_").grid(row=3, column=6)
             ttk.Label(self.hangman_area, text="_").grid(row=3, column=7)
+            self.remaining.config(foreground="orange")
         elif self.remaining_guesses == 6:
             ttk.Label(self.hangman_area, text="|").grid(row=3, column=8)
         elif self.remaining_guesses == 7:
