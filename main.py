@@ -10,7 +10,14 @@ class App:
     def __init__(self, root):
         # Field data
         self.root = root
-        self.word = RandomWords().get_random_word(minCorpusCount=2500, minLength=5, maxLength=8).lower()
+        try:
+            self.word = RandomWords().get_random_word(minCorpusCount=2500, minLength=5, maxLength=8).lower()
+        except:
+            messagebox.showerror(title="Error", message="Unable to connect. Please try again.")
+            self.root.quit()
+        while True:
+            if self.test_word():
+                break
         self.correct_guesses = []
         self.incorrect_guesses = []
         self.remaining_guesses = 8
@@ -85,6 +92,13 @@ class App:
         ttk.Button(self.command_area, text="z", command=partial(self.guess, "z"))\
             .grid(row=6, column=2, padx=5, pady=5)
 
+    def test_word(self):
+        for letter in self.word:
+            if not letter.isalpha:
+                self.word = RandomWords().get_random_word(minCorpusCount=2500, minLength=5, maxLength=8).lower()
+                return False
+        return True
+
     def guess(self, letter):
         if letter in self.word and letter not in self.correct_guesses:
             self.correct_guesses.append(letter)
@@ -108,7 +122,7 @@ class App:
         self.displayed_word.config(text=result, foreground="black")
         if "_" not in self.displayed_word["text"]:
             self.displayed_word.config(foreground="green")
-            play_again = messagebox.askyesno(message="You win! Play again?")
+            play_again = messagebox.askyesno(title="You win!", message="You win! Play again?")
             if play_again:
                 self.reset()
             else:
@@ -146,7 +160,7 @@ class App:
 
     def game_over(self):
         self.displayed_word.config(text=self.word.upper(), foreground="red")
-        play_again = messagebox.askyesno(message=f"You lose! The word was {self.word.upper()}.\nPlay again?")
+        play_again = messagebox.askyesno(title="You lose!", message=f"You lose! The word was {self.word.upper()}.\nPlay again?")
         if play_again:
             self.reset()
         else:
