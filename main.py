@@ -6,22 +6,17 @@ from functools import partial
 from random_word import RandomWords
 
 
-"""
-To Do:
-- Fix bug where punctuation can appear in word options
-"""
-
-
 class App:
     def __init__(self, root):
         # Field data
         self.root = root
-        self.EASY = 500
-        self.MEDIUM = 1000
-        self.HARD = 3000
+        self.EASY = 500_000
+        self.MEDIUM = 100_000
+        self.HARD = 50_000
         self.difficulty = self.EASY
         self.min_word_length = 5
         self.max_word_length = 8
+        self.word = ""
         self.generate_word()
         self.correct_guesses = []
         self.incorrect_guesses = []
@@ -114,26 +109,26 @@ class App:
         self.command_area.pack()
         # Creates letter buttons
         for i in range(0, 25):
-            ttk.Button(self.command_area, text=chr(97+i), command=partial(self.guess, chr(97+i)))\
-                .grid(row=(i//5), column=i%5, padx=5, pady=5)
-        ttk.Button(self.command_area, text="z", command=partial(self.guess, "z"))\
+            ttk.Button(self.command_area, text=chr(97 + i), command=partial(self.guess, chr(97 + i))) \
+                .grid(row=(i // 5), column=i % 5, padx=5, pady=5)
+        ttk.Button(self.command_area, text="z", command=partial(self.guess, "z")) \
             .grid(row=6, column=2, padx=5, pady=5)
 
     def generate_word(self):
         try:
             self.word = RandomWords().get_random_word(minCorpusCount=self.difficulty,
-                                                      minLength=self.min_word_length,
-                                                      maxLength=self.max_word_length).lower()
+                                                 minLength=self.min_word_length,
+                                                 maxLength=self.max_word_length).lower()
+            while True:
+                if self.test_word():
+                    break
         except:
-            messagebox.showerror(title="Error", message="Unable to connect. Please try again.")
+            messagebox.showerror(title="Error", message="Unable to connect. Check your connection and try again.")
             self.root.quit()
-        while True:
-            if self.test_word():
-                break
 
     def test_word(self):
         for letter in self.word:
-            if not letter.isalpha:
+            if not letter.isalpha():
                 self.word = RandomWords().get_random_word(minCorpusCount=2500, minLength=5, maxLength=8).lower()
                 return False
         return True
@@ -199,7 +194,8 @@ class App:
 
     def game_over(self):
         self.displayed_word.config(text=self.word.upper(), foreground="red")
-        play_again = messagebox.askyesno(title="You lose!", message=f"You lose! The word was {self.word.upper()}.\nPlay again?")
+        play_again = messagebox.askyesno(title="You lose!",
+                                         message=f"You lose! The word was {self.word.upper()}.\nPlay again?")
         if play_again:
             self.reset()
         else:
