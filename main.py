@@ -22,6 +22,22 @@ class App:
         photo = ImageTk.PhotoImage(ico)
         self.root.wm_iconphoto(False, photo)
 
+        # MENU BAR
+        root.option_add('*tearOff', False)
+        menubar = Menu(root)
+        root.config(menu=menubar)
+        file_menu = Menu(self.root)
+        menubar.add_cascade(menu=file_menu, label="File")
+        file_menu.add_command(label="New Game", command=self.reset)
+        file_menu.add_separator()
+        file_menu.add_command(label="Quit", command=self.root.quit)
+        help_menu = Menu(self.root)
+        menubar.add_cascade(menu=help_menu, label="Help")
+        help_menu.add_command(
+            label="About", command=lambda: messagebox.showinfo(
+                title="About", message="Created by Peyton Bechard © 2022."))
+
+
         # TITLE AREA
         self.title_area = ttk.Frame(self.root, width=430, height=50, relief=RIDGE, padding=10)
         self.title_area.pack()
