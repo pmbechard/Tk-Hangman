@@ -10,14 +10,18 @@ class App:
     def __init__(self, root):
         # Field data
         self.root = root
+        self.difficulty = 5000
+        self.min_word_length = 5
+        self.max_word_length = 8
         self.generate_word()
         self.correct_guesses = []
         self.incorrect_guesses = []
         self.remaining_guesses = 8
 
+
         # Window Settings
         self.root.title("Hangman")
-        self.root.resizable(0, 0)
+        self.root.resizable(False, False)
         ico = Image.open('images/pb.png')
         photo = ImageTk.PhotoImage(ico)
         self.root.wm_iconphoto(False, photo)
@@ -30,6 +34,8 @@ class App:
         menubar.add_cascade(menu=file_menu, label="File")
         file_menu.add_command(label="New Game", command=self.reset)
         file_menu.add_separator()
+        file_menu.add_command(label="Preferences", command=self.open_settings)
+        file_menu.add_separator()
         file_menu.add_command(label="Quit", command=self.root.quit)
         help_menu = Menu(self.root)
         menubar.add_cascade(menu=help_menu, label="Help")
@@ -37,6 +43,7 @@ class App:
             label="How to Play", command=lambda: messagebox.showinfo(
                 title="How to Play", message="Choose letters that you believe could be in the mystery word. "
                                              "If you get 8 wrong, you lose. If you get all the letters, you win!"))
+        help_menu.add_separator()
         help_menu.add_command(
             label="About", command=lambda: messagebox.showinfo(
                 title="About", message="Created by Peyton Bechard © 2022."))
@@ -107,7 +114,9 @@ class App:
 
     def generate_word(self):
         try:
-            self.word = RandomWords().get_random_word(minCorpusCount=2500, minLength=5, maxLength=8).lower()
+            self.word = RandomWords().get_random_word(minCorpusCount=self.difficulty,
+                                                      minLength=self.min_word_length,
+                                                      maxLength=self.max_word_length).lower()
         except:
             messagebox.showerror(title="Error", message="Unable to connect. Please try again.")
             self.root.quit()
@@ -208,6 +217,55 @@ class App:
         ttk.Label(self.hangman_area, text=" ").grid(row=3, column=7)
         ttk.Label(self.hangman_area, text=" ").grid(row=3, column=8)
         ttk.Label(self.hangman_area, text=" ").grid(row=2, column=8)
+
+    def open_settings(self):
+        settings_window = Toplevel(self.root)
+        settings_window.title("Preferences")
+        settings_window.resizable(False, False)
+        settings_window.grab_set()
+
+        ttk.Label(settings_window, text="Word difficulty:").pack()
+        difficulty_options = ["Easy", "Medium", "Hard"]
+        user_difficulty = StringVar()
+        user_difficulty.set("Select a difficulty level:")
+        difficulty_combobox = ttk.Combobox(settings_window, textvariable=user_difficulty, value=difficulty_options)
+        difficulty_combobox.pack(padx=10, pady=10)
+
+        ttk.Label(settings_window, text="Minimum word length:").pack()
+        min_length = IntVar()
+        min_length_spinbox = Spinbox(settings_window, from_=3, to=9, textvariable=min_length)
+        min_length_spinbox.pack()
+
+        ttk.Label(settings_window, text="Maximum word length:").pack()
+        max_length = IntVar()
+        max_length_spinbox = Spinbox(settings_window, from_=4, to=10, textvariable=max_length)
+        max_length_spinbox.pack()
+
+        ttk.Button(settings_window, text="Update Preferences",
+                   command=lambda: self.update_preferences(settings_window, user_difficulty.get(), min_length.get(), max_length.get())).pack()
+
+        ttk.Button(settings_window, text="Restore Defaults", command=self.restore_default_settings).pack()
+
+    def update_preferences(self, window, difficulty, min_length, max_length):
+        if min_length > max_length:
+            messagebox.showerror(title="Error", message="Invalid length inputs. Try again.")
+            window.destroy()
+            self.open_settings()
+        else:
+            if difficulty == "Easy":
+                self.difficulty = 10000
+            elif difficulty == "Medium":
+                self.difficulty = 5000
+            elif difficulty == "Hard":
+                self.difficulty = 2000
+            self.min_word_length = min_length
+            self.max_word_length = max_length
+            self.reset()
+            window.destroy()
+
+    def restore_default_settings(self):
+        pass
+
 
 
 def main():
