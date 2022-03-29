@@ -193,7 +193,8 @@ class App:
             ttk.Label(self.hangman_area, text="0").grid(row=2, column=8)
 
     def game_over(self):
-        self.displayed_word.config(text=self.word.upper(), foreground="red")
+        result = " ".join([letter for letter in self.word])
+        self.displayed_word.config(text=result.upper(), foreground="red")
         play_again = messagebox.askyesno(title="You lose!",
                                          message=f"You lose! The word was {self.word.upper()}.\nPlay again?")
         if play_again:
