@@ -6,6 +6,13 @@ from functools import partial
 from random_word import RandomWords
 
 
+"""
+To Do:
+- Fix bug where punctuation can appear in word options
+- Add restore defaults functionality
+- Pad Preferences window
+"""
+
 class App:
     def __init__(self, root):
         # Field data
@@ -227,24 +234,31 @@ class App:
         ttk.Label(settings_window, text="Word difficulty:").pack()
         difficulty_options = ["Easy", "Medium", "Hard"]
         user_difficulty = StringVar()
-        user_difficulty.set("Select a difficulty level:")
+        if self.difficulty == 10000:
+            user_difficulty.set("Easy")
+        elif self.difficulty == 5000:
+            user_difficulty.set("Medium")
+        else:
+            user_difficulty.set("Hard")
         difficulty_combobox = ttk.Combobox(settings_window, textvariable=user_difficulty, value=difficulty_options)
         difficulty_combobox.pack(padx=10, pady=10)
 
         ttk.Label(settings_window, text="Minimum word length:").pack()
         min_length = IntVar()
+        min_length.set(self.min_word_length)
         min_length_spinbox = Spinbox(settings_window, from_=3, to=9, textvariable=min_length)
         min_length_spinbox.pack()
 
         ttk.Label(settings_window, text="Maximum word length:").pack()
         max_length = IntVar()
+        max_length.set(self.max_word_length)
         max_length_spinbox = Spinbox(settings_window, from_=4, to=10, textvariable=max_length)
         max_length_spinbox.pack()
 
         ttk.Button(settings_window, text="Update Preferences",
                    command=lambda: self.update_preferences(settings_window, user_difficulty.get(), min_length.get(), max_length.get())).pack()
 
-        ttk.Button(settings_window, text="Restore Defaults", command=self.restore_default_settings).pack()
+        ttk.Button(settings_window, text="Restore Defaults", command=lambda: self.restore_default_settings(settings_window)).pack()
 
     def update_preferences(self, window, difficulty, min_length, max_length):
         if min_length > max_length:
@@ -263,8 +277,12 @@ class App:
             self.reset()
             window.destroy()
 
-    def restore_default_settings(self):
-        pass
+    def restore_default_settings(self, window):
+        self.difficulty = 5000
+        self.min_word_length = 5
+        self.max_word_length = 8
+        window.destroy()
+
 
 
 
