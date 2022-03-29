@@ -26,8 +26,8 @@ class App:
         self.root.title("Hangman")
         self.root.resizable(False, False)
         ico = Image.open('images/pb.png')
-        photo = ImageTk.PhotoImage(ico)
-        self.root.wm_iconphoto(False, photo)
+        self.photo = ImageTk.PhotoImage(ico)
+        self.root.wm_iconphoto(False, self.photo)
 
         # MENU BAR
         root.option_add('*tearOff', False)
@@ -225,6 +225,7 @@ class App:
         settings_window = Toplevel(self.root)
         settings_window.title("Preferences")
         settings_window.resizable(False, False)
+        settings_window.wm_iconphoto(False, self.photo)
         settings_window.grab_set()
 
         ttk.Label(settings_window, text="Word difficulty:").pack(padx=50, pady=5)
