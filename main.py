@@ -9,8 +9,6 @@ from random_word import RandomWords
 """
 To Do:
 - Fix bug where punctuation can appear in word options
-- Adjust difficulty settings
-- Pad Preferences window
 """
 
 
@@ -18,7 +16,10 @@ class App:
     def __init__(self, root):
         # Field data
         self.root = root
-        self.difficulty = 5000
+        self.EASY = 500
+        self.MEDIUM = 1000
+        self.HARD = 3000
+        self.difficulty = self.EASY
         self.min_word_length = 5
         self.max_word_length = 8
         self.generate_word()
@@ -54,7 +55,6 @@ class App:
         help_menu.add_command(
             label="About", command=lambda: messagebox.showinfo(
                 title="About", message="Created by Peyton Bechard © 2022."))
-
 
         # TITLE AREA
         self.title_area = ttk.Frame(self.root, width=430, height=50, relief=RIDGE, padding=10)
@@ -234,9 +234,9 @@ class App:
         ttk.Label(settings_window, text="Word difficulty:").pack(padx=50, pady=5)
         difficulty_options = ["Easy", "Medium", "Hard"]
         user_difficulty = StringVar()
-        if self.difficulty == 10000:
+        if self.difficulty == self.EASY:
             user_difficulty.set("Easy")
-        elif self.difficulty == 5000:
+        elif self.difficulty == self.MEDIUM:
             user_difficulty.set("Medium")
         else:
             user_difficulty.set("Hard")
@@ -269,11 +269,11 @@ class App:
             self.open_settings()
         else:
             if difficulty == "Easy":
-                self.difficulty = 10000
+                self.difficulty = self.EASY
             elif difficulty == "Medium":
-                self.difficulty = 5000
+                self.difficulty = self.MEDIUM
             elif difficulty == "Hard":
-                self.difficulty = 2000
+                self.difficulty = self.HARD
             self.min_word_length = min_length
             self.max_word_length = max_length
             self.reset()
