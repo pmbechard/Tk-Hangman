@@ -34,6 +34,10 @@ class App:
         help_menu = Menu(self.root)
         menubar.add_cascade(menu=help_menu, label="Help")
         help_menu.add_command(
+            label="How to Play", command=lambda: messagebox.showinfo(
+                title="How to Play", message="Choose letters that you believe could be in the mystery word. "
+                                             "If you get 8 wrong, you lose. If you get all the letters, you win!"))
+        help_menu.add_command(
             label="About", command=lambda: messagebox.showinfo(
                 title="About", message="Created by Peyton Bechard © 2022."))
 
