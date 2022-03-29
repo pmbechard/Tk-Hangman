@@ -10,14 +10,7 @@ class App:
     def __init__(self, root):
         # Field data
         self.root = root
-        try:
-            self.word = RandomWords().get_random_word(minCorpusCount=2500, minLength=5, maxLength=8).lower()
-        except:
-            messagebox.showerror(title="Error", message="Unable to connect. Please try again.")
-            self.root.quit()
-        while True:
-            if self.test_word():
-                break
+        self.generate_word()
         self.correct_guesses = []
         self.incorrect_guesses = []
         self.remaining_guesses = 8
@@ -91,6 +84,16 @@ class App:
                 .grid(row=(i//5), column=i%5, padx=5, pady=5)
         ttk.Button(self.command_area, text="z", command=partial(self.guess, "z"))\
             .grid(row=6, column=2, padx=5, pady=5)
+
+    def generate_word(self):
+        try:
+            self.word = RandomWords().get_random_word(minCorpusCount=2500, minLength=5, maxLength=8).lower()
+        except:
+            messagebox.showerror(title="Error", message="Unable to connect. Please try again.")
+            self.root.quit()
+        while True:
+            if self.test_word():
+                break
 
     def test_word(self):
         for letter in self.word:
@@ -167,7 +170,7 @@ class App:
             self.root.destroy()
 
     def reset(self):
-        self.word = RandomWords().get_random_word(minCorpusCount=1500, minLength=5, maxLength=8).lower()
+        self.generate_word()
         self.correct_guesses = []
         self.incorrect_guesses = []
         self.remaining_guesses = 8
