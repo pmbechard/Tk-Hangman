@@ -9,9 +9,10 @@ from random_word import RandomWords
 """
 To Do:
 - Fix bug where punctuation can appear in word options
-- Add restore defaults functionality
+- Adjust difficulty settings
 - Pad Preferences window
 """
+
 
 class App:
     def __init__(self, root):
@@ -24,7 +25,6 @@ class App:
         self.correct_guesses = []
         self.incorrect_guesses = []
         self.remaining_guesses = 8
-
 
         # Window Settings
         self.root.title("Hangman")
@@ -231,7 +231,7 @@ class App:
         settings_window.resizable(False, False)
         settings_window.grab_set()
 
-        ttk.Label(settings_window, text="Word difficulty:").pack()
+        ttk.Label(settings_window, text="Word difficulty:").pack(padx=50, pady=5)
         difficulty_options = ["Easy", "Medium", "Hard"]
         user_difficulty = StringVar()
         if self.difficulty == 10000:
@@ -241,28 +241,30 @@ class App:
         else:
             user_difficulty.set("Hard")
         difficulty_combobox = ttk.Combobox(settings_window, textvariable=user_difficulty, value=difficulty_options)
-        difficulty_combobox.pack(padx=10, pady=10)
+        difficulty_combobox.pack(padx=50, pady=5)
 
-        ttk.Label(settings_window, text="Minimum word length:").pack()
+        ttk.Label(settings_window, text="Minimum word length:").pack(padx=50, pady=5)
         min_length = IntVar()
         min_length.set(self.min_word_length)
         min_length_spinbox = Spinbox(settings_window, from_=3, to=9, textvariable=min_length)
-        min_length_spinbox.pack()
+        min_length_spinbox.pack(padx=50, pady=5)
 
-        ttk.Label(settings_window, text="Maximum word length:").pack()
+        ttk.Label(settings_window, text="Maximum word length:").pack(padx=30, pady=5)
         max_length = IntVar()
         max_length.set(self.max_word_length)
         max_length_spinbox = Spinbox(settings_window, from_=4, to=10, textvariable=max_length)
-        max_length_spinbox.pack()
+        max_length_spinbox.pack(padx=50, pady=5)
 
         ttk.Button(settings_window, text="Update Preferences",
-                   command=lambda: self.update_preferences(settings_window, user_difficulty.get(), min_length.get(), max_length.get())).pack()
-
-        ttk.Button(settings_window, text="Restore Defaults", command=lambda: self.restore_default_settings(settings_window)).pack()
+                   command=lambda: self.update_preferences(settings_window, user_difficulty.get(), min_length.get(),
+                                                           max_length.get())).pack(padx=50, pady=5)
+        ttk.Button(settings_window, text="Restore Defaults",
+                   command=lambda: self.restore_default_settings(settings_window)).pack(padx=50, pady=5)
 
     def update_preferences(self, window, difficulty, min_length, max_length):
-        if min_length > max_length:
-            messagebox.showerror(title="Error", message="Invalid length inputs. Try again.")
+        difficulty = difficulty.title()
+        if min_length > max_length or difficulty not in ["Easy", "Medium", "Hard"]:
+            messagebox.showerror(title="Error", message="Invalid input. Try again.")
             window.destroy()
             self.open_settings()
         else:
@@ -282,8 +284,6 @@ class App:
         self.min_word_length = 5
         self.max_word_length = 8
         window.destroy()
-
-
 
 
 def main():
